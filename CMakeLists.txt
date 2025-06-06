@@ -22,8 +22,17 @@ include_directories(
   ${EIGEN3_INCLUDE_DIRS}
 )
 
+add_library(${PROJECT_NAME}_lib
+  src/ik_calculator.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}_lib
+  ${catkin_LIBRARIES}
+)
+
 add_executable(${PROJECT_NAME}_node src/ik_solver_node.cpp)
 
 target_link_libraries(${PROJECT_NAME}_node
+  ${PROJECT_NAME}_lib
   ${catkin_LIBRARIES}
 )
