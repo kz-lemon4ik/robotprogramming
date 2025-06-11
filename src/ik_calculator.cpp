@@ -1,16 +1,44 @@
 #include "robotprogramming/ik_calculator.h"
+#include <stdexcept>
 
 namespace robotprogramming {
 
 IKCalculator::IKCalculator(double link1_length, double link2_length)
     : L1_(link1_length), L2_(link2_length) {
-    // Constructor implementation will be added in next phase
+    if (L1_ <= 0.0 || L2_ <= 0.0) {
+        throw std::invalid_argument("Link lengths must be positive");
+    }
 }
 
 bool IKCalculator::calculate_joint_angles(double target_x, double target_y, 
                                          double& theta1, double& theta2) const {
-    // Implementation placeholder - will be completed in geometric solution phase
-    return false;
+    if (!validate_target(target_x, target_y)) {
+        return false;
+    }
+    
+    if (!is_reachable(target_x, target_y)) {
+        return false;
+    }
+    
+    // Calculate distance to target
+    double d_squared = target_x * target_x + target_y * target_y;
+    double d = std::sqrt(d_squared);
+    
+    // Calculate theta2 using law of cosines
+    double cos_theta2 = (d_squared - L1_ * L1_ - L2_ * L2_) / (2.0 * L1_ * L2_);
+    
+    // Clamp to valid range due to numerical precision
+    cos_theta2 = std::max(-1.0, std::min(1.0, cos_theta2));
+    
+    // Elbow up configuration
+    theta2 = std::acos(cos_theta2);
+    
+    // Calculate theta1
+    double alpha = std::atan2(target_y, target_x);
+    double beta = std::atan2(L2_ * std::sin(theta2), L1_ + L2_ * std::cos(theta2));
+    theta1 = alpha - beta;
+    
+    return true;
 }
 
 bool IKCalculator::is_reachable(double target_x, double target_y) const {
