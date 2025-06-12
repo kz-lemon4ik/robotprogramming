@@ -8,6 +8,8 @@ namespace robotprogramming {
 
 class IKCalculator {
 public:
+    static constexpr double NUMERICAL_TOLERANCE = 1e-10;
+    
     IKCalculator(double link1_length, double link2_length);
     
     ~IKCalculator() = default;
