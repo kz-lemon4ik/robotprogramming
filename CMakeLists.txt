@@ -36,3 +36,10 @@ target_link_libraries(${PROJECT_NAME}_node
   ${PROJECT_NAME}_lib
   ${catkin_LIBRARIES}
 )
+
+add_executable(test_ik_calculator src/test_ik_calculator.cpp)
+
+target_link_libraries(test_ik_calculator
+  ${PROJECT_NAME}_lib
+  ${catkin_LIBRARIES}
+)
