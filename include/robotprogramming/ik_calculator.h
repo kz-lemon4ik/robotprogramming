@@ -38,6 +38,12 @@ private:
     
     // Validate input parameters
     bool validate_target(double x, double y) const;
+    
+    // Handle special cases and singularities
+    bool handle_origin_singularity(double target_x, double target_y,
+                                  double& theta1, double& theta2) const;
+    bool handle_boundary_cases(double target_x, double target_y,
+                              double& theta1, double& theta2) const;
 };
 
 }  // namespace robotprogramming
