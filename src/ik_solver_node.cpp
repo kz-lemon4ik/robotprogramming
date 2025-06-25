@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/JointState.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
 #include "robotprogramming/ik_calculator.h"
 
 class IKSolverNode {
@@ -8,6 +10,8 @@ private:
     ros::NodeHandle nh_;
     ros::Subscriber target_sub_;
     ros::Publisher joint_pub_;
+    ros::Publisher reachable_pub_;
+    ros::Publisher status_pub_;
     
     robotprogramming::IKCalculator ik_calculator_;
     
@@ -35,11 +39,15 @@ public:
         target_sub_ = nh_.subscribe("target_goal", 10, 
                                    &IKSolverNode::targetCallback, this);
         joint_pub_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 10);
+        reachable_pub_ = nh_.advertise<std_msgs::Bool>("target_reachable", 10);
+        status_pub_ = nh_.advertise<std_msgs::String>("ik_status", 10);
         
         ROS_INFO("IK Solver Node initialized");
         ROS_INFO("Link lengths: L1=%.2f, L2=%.2f", link1_length_, link2_length_);
         ROS_INFO("Workspace: min_reach=%.2f, max_reach=%.2f", 
                  ik_calculator_.get_min_reach(), ik_calculator_.get_max_reach());
+        ROS_INFO("Subscribed to: %s", target_sub_.getTopic().c_str());
+        ROS_INFO("Publishing to: %s", joint_pub_.getTopic().c_str());
     }
     
     void targetCallback(const geometry_msgs::Point::ConstPtr& msg) {
@@ -71,6 +79,18 @@ public:
         joint_state.position.push_back(theta2);
         
         joint_pub_.publish(joint_state);
+    }
+    
+    void publishReachability(bool reachable) {
+        std_msgs::Bool msg;
+        msg.data = reachable;
+        reachable_pub_.publish(msg);
+    }
+    
+    void publishStatus(const std::string& status) {
+        std_msgs::String msg;
+        msg.data = status;
+        status_pub_.publish(msg);
     }
     
     void spin() {
