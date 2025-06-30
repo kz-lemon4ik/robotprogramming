@@ -55,18 +55,27 @@ public:
         
         ROS_INFO("Received target: (%.3f, %.3f)", msg->x, msg->y);
         
+        // Check reachability first and publish result
+        bool reachable = ik_calculator_.is_reachable(msg->x, msg->y);
+        publishReachability(reachable);
+        
+        if (!reachable) {
+            ROS_WARN("Target (%.3f, %.3f) is not reachable", msg->x, msg->y);
+            publishStatus("UNREACHABLE");
+            return;
+        }
+        
         // Calculate inverse kinematics
         bool success = ik_calculator_.calculate_joint_angles(msg->x, msg->y, theta1, theta2);
         
         if (success) {
-            ROS_INFO("IK solution: theta1=%.3f, theta2=%.3f", theta1, theta2);
+            ROS_INFO("IK solution: theta1=%.3f rad (%.1f deg), theta2=%.3f rad (%.1f deg)", 
+                     theta1, theta1 * 180.0 / M_PI, theta2, theta2 * 180.0 / M_PI);
             publishJointStates(theta1, theta2);
+            publishStatus("SUCCESS");
         } else {
-            if (!ik_calculator_.is_reachable(msg->x, msg->y)) {
-                ROS_WARN("Target (%.3f, %.3f) is not reachable", msg->x, msg->y);
-            } else {
-                ROS_ERROR("IK calculation failed for target (%.3f, %.3f)", msg->x, msg->y);
-            }
+            ROS_ERROR("IK calculation failed for target (%.3f, %.3f)", msg->x, msg->y);
+            publishStatus("CALCULATION_FAILED");
         }
     }
     
@@ -77,6 +86,12 @@ public:
         joint_state.name = joint_names_;
         joint_state.position.push_back(theta1);
         joint_state.position.push_back(theta2);
+        
+        // Add zero velocities and efforts for complete joint state
+        joint_state.velocity.push_back(0.0);
+        joint_state.velocity.push_back(0.0);
+        joint_state.effort.push_back(0.0);
+        joint_state.effort.push_back(0.0);
         
         joint_pub_.publish(joint_state);
     }
