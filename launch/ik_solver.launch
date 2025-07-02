@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Robot parameters -->
+  <param name="link1_length" value="1.0" />
+  <param name="link2_length" value="1.0" />
+  
+  <!-- IK Solver Node -->
+  <node name="ik_solver_node" 
+        pkg="robotprogramming" 
+        type="robotprogramming_node" 
+        output="screen">
+    <remap from="target_goal" to="/target_goal" />
+    <remap from="joint_states" to="/joint_states" />
+    <remap from="target_reachable" to="/target_reachable" />
+    <remap from="ik_status" to="/ik_status" />
+  </node>
+
+</launch>
