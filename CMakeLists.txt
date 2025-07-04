@@ -3,6 +3,7 @@ project(robotprogramming)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  std_msgs
   geometry_msgs
   sensor_msgs
 )
@@ -12,8 +13,7 @@ find_package(Eigen3 REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES robotprogramming
-  CATKIN_DEPENDS roscpp geometry_msgs sensor_msgs
-  DEPENDS system_lib
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs
 )
 
 include_directories(
