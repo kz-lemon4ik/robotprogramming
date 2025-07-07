@@ -15,4 +15,14 @@
     <remap from="ik_status" to="/ik_status" />
   </node>
 
+  <!-- Robot Description -->
+  <param name="robot_description" 
+         textfile="$(find robotprogramming)/urdf/robot.urdf" />
+  
+  <!-- Robot State Publisher -->
+  <node name="robot_state_publisher" 
+        pkg="robot_state_publisher" 
+        type="robot_state_publisher"
+        output="screen" />
+
 </launch>
