@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Robot parameters -->
+  <param name="link1_length" value="1.0" />
+  <param name="link2_length" value="1.0" />
+  
+  <!-- IK Solver Node -->
+  <node name="ik_solver_node" 
+        pkg="robotprogramming" 
+        type="robotprogramming_node" 
+        output="screen">
+    <remap from="target_goal" to="/target_goal" />
+    <remap from="joint_states" to="/joint_states" />
+    <remap from="target_reachable" to="/target_reachable" />
+    <remap from="ik_status" to="/ik_status" />
+  </node>
+
+  <!-- Robot Description -->
+  <param name="robot_description" 
+         textfile="$(find robotprogramming)/urdf/robot.urdf" />
+  
+  <!-- Robot State Publisher -->
+  <node name="robot_state_publisher" 
+        pkg="robot_state_publisher" 
+        type="robot_state_publisher"
+        output="screen" />
+
+  <!-- RViz Visualization -->
+  <node name="rviz" 
+        pkg="rviz" 
+        type="rviz"
+        args="-d $(find robotprogramming)/config/rviz_config.rviz"
+        output="screen" />
+
+  <!-- Keyboard Controller -->
+  <node name="keyboard_controller_node" 
+        pkg="robotprogramming" 
+        type="keyboard_controller_node"
+        output="screen" />
+
+</launch>

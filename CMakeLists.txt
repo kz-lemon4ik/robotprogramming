@@ -43,3 +43,9 @@ target_link_libraries(test_ik_calculator
   ${PROJECT_NAME}_lib
   ${catkin_LIBRARIES}
 )
+
+add_executable(keyboard_controller_node src/keyboard_controller_node.cpp)
+
+target_link_libraries(keyboard_controller_node
+  ${catkin_LIBRARIES}
+)
