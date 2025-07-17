@@ -1,20 +1,15 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- Robot parameters -->
-  <param name="link1_length" value="1.0" />
-  <param name="link2_length" value="1.0" />
+  <!-- Launch arguments for flexibility -->
+  <arg name="link1_length" default="1.0" />
+  <arg name="link2_length" default="1.0" />
+  <arg name="use_rviz" default="true" />
+  <arg name="rviz_config" default="$(find robotprogramming)/config/rviz_config.rviz" />
   
-  <!-- IK Solver Node -->
-  <node name="ik_solver_node" 
-        pkg="robotprogramming" 
-        type="robotprogramming_node" 
-        output="screen">
-    <remap from="target_goal" to="/target_goal" />
-    <remap from="joint_states" to="/joint_states" />
-    <remap from="target_reachable" to="/target_reachable" />
-    <remap from="ik_status" to="/ik_status" />
-  </node>
-
+  <!-- Robot parameters -->
+  <param name="link1_length" value="$(arg link1_length)" />
+  <param name="link2_length" value="$(arg link2_length)" />
+  
   <!-- Robot Description -->
   <param name="robot_description" 
          textfile="$(find robotprogramming)/urdf/robot.urdf" />
@@ -23,13 +18,31 @@
   <node name="robot_state_publisher" 
         pkg="robot_state_publisher" 
         type="robot_state_publisher"
-        output="screen" />
+        output="screen"
+        respawn="true"
+        respawn_delay="2" />
 
-  <!-- RViz Visualization -->
-  <node name="rviz" 
-        pkg="rviz" 
-        type="rviz"
-        args="-d $(find robotprogramming)/config/rviz_config.rviz"
-        output="screen" />
+  <!-- IK Solver Node -->
+  <node name="ik_solver_node" 
+        pkg="robotprogramming" 
+        type="robotprogramming_node" 
+        output="screen"
+        respawn="true"
+        respawn_delay="2">
+    <remap from="target_goal" to="/target_goal" />
+    <remap from="joint_states" to="/joint_states" />
+    <remap from="target_reachable" to="/target_reachable" />
+    <remap from="ik_status" to="/ik_status" />
+  </node>
+
+  <!-- RViz Visualization (optional) -->
+  <group if="$(arg use_rviz)">
+    <node name="rviz" 
+          pkg="rviz" 
+          type="rviz"
+          args="-d $(arg rviz_config)"
+          output="screen"
+          required="false" />
+  </group>
 
 </launch>

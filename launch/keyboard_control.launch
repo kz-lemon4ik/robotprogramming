@@ -1,41 +1,24 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- Robot parameters -->
-  <param name="link1_length" value="1.0" />
-  <param name="link2_length" value="1.0" />
+  <!-- Launch arguments for flexibility -->
+  <arg name="link1_length" default="1.0" />
+  <arg name="link2_length" default="1.0" />
+  <arg name="use_rviz" default="true" />
+  <arg name="rviz_config" default="$(find robotprogramming)/config/rviz_config.rviz" />
   
-  <!-- IK Solver Node -->
-  <node name="ik_solver_node" 
-        pkg="robotprogramming" 
-        type="robotprogramming_node" 
-        output="screen">
-    <remap from="target_goal" to="/target_goal" />
-    <remap from="joint_states" to="/joint_states" />
-    <remap from="target_reachable" to="/target_reachable" />
-    <remap from="ik_status" to="/ik_status" />
-  </node>
-
-  <!-- Robot Description -->
-  <param name="robot_description" 
-         textfile="$(find robotprogramming)/urdf/robot.urdf" />
-  
-  <!-- Robot State Publisher -->
-  <node name="robot_state_publisher" 
-        pkg="robot_state_publisher" 
-        type="robot_state_publisher"
-        output="screen" />
-
-  <!-- RViz Visualization -->
-  <node name="rviz" 
-        pkg="rviz" 
-        type="rviz"
-        args="-d $(find robotprogramming)/config/rviz_config.rviz"
-        output="screen" />
+  <!-- Include basic robot launch -->
+  <include file="$(find robotprogramming)/launch/robot_control.launch">
+    <arg name="link1_length" value="$(arg link1_length)" />
+    <arg name="link2_length" value="$(arg link2_length)" />
+    <arg name="use_rviz" value="$(arg use_rviz)" />
+    <arg name="rviz_config" value="$(arg rviz_config)" />
+  </include>
 
   <!-- Keyboard Controller -->
   <node name="keyboard_controller_node" 
         pkg="robotprogramming" 
         type="keyboard_controller_node"
-        output="screen" />
+        output="screen"
+        launch-prefix="xterm -e" />
 
 </launch>

@@ -24,11 +24,26 @@ private:
 
 public:
     IKSolverNode() : ik_calculator_(1.0, 1.0) {
-        // Get parameters from parameter server
-        nh_.param("link1_length", link1_length_, 1.0);
-        nh_.param("link2_length", link2_length_, 1.0);
+        // Get parameters from parameter server with validation
+        if (!nh_.getParam("link1_length", link1_length_)) {
+            nh_.param("link1_length", link1_length_, 1.0);
+            ROS_WARN("Parameter 'link1_length' not found, using default: %.2f", link1_length_);
+        }
         
-        // Reinitialize calculator with parameters
+        if (!nh_.getParam("link2_length", link2_length_)) {
+            nh_.param("link2_length", link2_length_, 1.0);
+            ROS_WARN("Parameter 'link2_length' not found, using default: %.2f", link2_length_);
+        }
+        
+        // Validate parameters
+        if (link1_length_ <= 0.0 || link2_length_ <= 0.0) {
+            ROS_ERROR("Invalid link lengths: L1=%.2f, L2=%.2f. Must be positive.", 
+                      link1_length_, link2_length_);
+            ros::shutdown();
+            return;
+        }
+        
+        // Reinitialize calculator with validated parameters
         ik_calculator_ = robotprogramming::IKCalculator(link1_length_, link2_length_);
         
         // Set up joint names
