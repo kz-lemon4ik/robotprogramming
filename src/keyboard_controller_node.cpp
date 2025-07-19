@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 
+// Interactive keyboard controller for 2-link arm target input
 class KeyboardController {
 private:
     ros::NodeHandle nh_;
@@ -16,6 +17,7 @@ public:
         ROS_INFO("Publishing to: %s", target_pub_.getTopic().c_str());
     }
     
+    // Main control loop for user input processing
     void run() {
         std::string input;
         double x, y;
@@ -36,12 +38,13 @@ public:
                 break;
             }
             
+            // Parse input coordinates
             std::istringstream iss(input);
             if (iss >> x >> y) {
                 geometry_msgs::Point target;
                 target.x = x;
                 target.y = y;
-                target.z = 0.0;
+                target.z = 0.0;  // 2D planar manipulator
                 
                 target_pub_.publish(target);
                 

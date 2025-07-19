@@ -5,6 +5,7 @@
 #include <std_msgs/String.h>
 #include "robotprogramming/ik_calculator.h"
 
+// Main ROS node for inverse kinematics calculation and robot state publishing
 class IKSolverNode {
 private:
     ros::NodeHandle nh_;
@@ -65,6 +66,7 @@ public:
         ROS_INFO("Publishing to: %s", joint_pub_.getTopic().c_str());
     }
     
+    // Process incoming target coordinates and calculate IK solution
     void targetCallback(const geometry_msgs::Point::ConstPtr& msg) {
         double theta1, theta2;
         
@@ -94,6 +96,7 @@ public:
         }
     }
     
+    // Publish calculated joint angles to robot_state_publisher
     void publishJointStates(double theta1, double theta2) {
         sensor_msgs::JointState joint_state;
         
@@ -102,7 +105,7 @@ public:
         joint_state.position.push_back(theta1);
         joint_state.position.push_back(theta2);
         
-        // Add zero velocities and efforts for complete joint state
+        // Add zero velocities and efforts (required for complete joint state)
         joint_state.velocity.push_back(0.0);
         joint_state.velocity.push_back(0.0);
         joint_state.effort.push_back(0.0);

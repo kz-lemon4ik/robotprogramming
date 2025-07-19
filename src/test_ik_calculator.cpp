@@ -3,12 +3,14 @@
 #include <iomanip>
 #include <vector>
 
+// Test case structure for comprehensive IK validation
 struct TestCase {
     double x;
     double y;
     std::string description;
 };
 
+// Execute single test case and display results with validation
 void print_test_result(const robotprogramming::IKCalculator& calculator,
                       const TestCase& test) {
     std::cout << "\nTest: " << test.description << std::endl;
