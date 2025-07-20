@@ -1,0 +1,61 @@
+---
+# clang-format configuration for ROS C++ projects
+BasedOnStyle: Google
+
+# Indentation
+IndentWidth: 2
+ContinuationIndentWidth: 4
+UseTab: Never
+
+# Line length
+ColumnLimit: 100
+
+# Spacing
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Alignment
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignOperands: true
+AlignTrailingComments: true
+
+# Breaking
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Attach
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeColon
+
+# Includes
+IncludeBlocks: Preserve
+SortIncludes: true
+
+# Pointers and references
+PointerAlignment: Left
+
+# Comments
+ReflowComments: true
+
+# Namespaces
+NamespaceIndentation: None
+
+# Access modifiers
+AccessModifierOffset: -1
+
+# Constructor initializers
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+
+# Language specific
+Standard: Cpp11

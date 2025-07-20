@@ -19,6 +19,6 @@
         pkg="robotprogramming" 
         type="keyboard_controller_node"
         output="screen"
-        launch-prefix="xterm -e" />
+        required="true" />
 
 </launch>

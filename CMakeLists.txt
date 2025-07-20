@@ -30,9 +30,9 @@ target_link_libraries(${PROJECT_NAME}_lib
   ${catkin_LIBRARIES}
 )
 
-add_executable(${PROJECT_NAME}_node src/ik_solver_node.cpp)
+add_executable(ik_solver_node src/ik_solver_node.cpp)
 
-target_link_libraries(${PROJECT_NAME}_node
+target_link_libraries(ik_solver_node
   ${PROJECT_NAME}_lib
   ${catkin_LIBRARIES}
 )
@@ -47,5 +47,6 @@ target_link_libraries(test_ik_calculator
 add_executable(keyboard_controller_node src/keyboard_controller_node.cpp)
 
 target_link_libraries(keyboard_controller_node
+  ${PROJECT_NAME}_lib
   ${catkin_LIBRARIES}
 )

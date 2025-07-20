@@ -27,25 +27,25 @@ sudo apt install ros-noetic-desktop-full
 sudo apt install libeigen3-dev
 ```
 
-### Build Instructions
+### Workspace Setup
 
-1. Create catkin workspace (if not exists):
+This package requires a catkin workspace. Create and configure:
 
 ```bash
+# Create workspace structure
 mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws
-catkin_make
-```
-
-2. Clone and build the package:
-
-```bash
 cd ~/catkin_ws/src
+
+# Clone or symlink the package
 git clone <repository-url> robotprogramming
+# OR if you have local copy: ln -s /path/to/robotprogramming .
+
 cd ~/catkin_ws
 catkin_make
 source devel/setup.bash
 ```
+
+**Note**: The `catkin_ws` directory contains build artifacts and should not be committed to version control. Only the package source code in `robotprogramming/` is tracked by git.
 
 ## Usage
 
@@ -65,7 +65,7 @@ Launch with interactive keyboard controller:
 roslaunch robotprogramming keyboard_control.launch
 ```
 
-Enter target coordinates when prompted (e.g., `1.5 0.5`).
+The keyboard controller will start in the same terminal. Enter target coordinates when prompted using space-separated format: `1.5 0.5` (not comma-separated).
 
 ### Manual Control
 
@@ -140,7 +140,10 @@ The inverse kinematics solution uses geometric approach:
 ### Unit Tests
 
 ```bash
-# Build and run IK calculator tests
+# Method 1: Using provided script
+./scripts/run_tests.sh
+
+# Method 2: Manual execution
 cd ~/catkin_ws
 catkin_make
 rosrun robotprogramming test_ik_calculator
@@ -207,12 +210,31 @@ rosrun tf view_frames
 evince frames.pdf
 ```
 
+## Dependencies
+
+### System Requirements
+- Ubuntu 20.04 LTS
+- ROS Noetic Ninjemys
+- C++17 compiler
+
+### Installation
+```bash
+# Install ROS dependencies
+rosdep install --from-paths . --ignore-src -r -y
+
+# Or manually install required packages
+sudo apt install ros-noetic-roscpp ros-noetic-std-msgs ros-noetic-geometry-msgs ros-noetic-sensor-msgs ros-noetic-robot-state-publisher ros-noetic-rviz
+sudo apt install libeigen3-dev
+```
+
+See `package.xml` for detailed dependency information.
+
 ## File Structure
 
 ```
 robotprogramming/
 ├── CMakeLists.txt          # Build configuration
-├── package.xml             # Package manifest
+├── package.xml             # Package manifest  
 ├── README.md              # This file
 ├── launch/                # Launch files
 │   ├── robot_control.launch
@@ -226,16 +248,35 @@ robotprogramming/
 │   └── test_ik_calculator.cpp
 ├── include/robotprogramming/  # Headers
 │   └── ik_calculator.h
-└── config/                # Configuration
-    └── rviz_config.rviz
+├── config/                # Configuration
+│   └── rviz_config.rviz
+└── scripts/               # Utility scripts
+    ├── run_tests.sh
+    └── test_ik_node.sh
+```
+
+## Code Formatting
+
+This project uses clang-format for consistent code style:
+
+```bash
+# Install clang-format (if not installed)
+sudo apt install clang-format
+
+# Format all C++ files
+find src include -name "*.cpp" -o -name "*.h" | xargs clang-format -i
+
+# Check formatting without modifying files
+find src include -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
 ```
 
 ## Contributing
 
 1. Follow ROS coding standards
-2. Write unit tests for new features
-3. Update documentation
-4. Test with different robot parameters
+2. Use clang-format before committing code
+3. Write unit tests for new features
+4. Update documentation
+5. Test with different robot parameters
 
 ## License
 

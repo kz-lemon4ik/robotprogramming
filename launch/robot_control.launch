@@ -25,7 +25,7 @@
   <!-- IK Solver Node -->
   <node name="ik_solver_node" 
         pkg="robotprogramming" 
-        type="robotprogramming_node" 
+        type="ik_solver_node" 
         output="screen"
         respawn="true"
         respawn_delay="2">
