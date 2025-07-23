@@ -19,3 +19,5 @@ install_manifest.txt
 *.bag.active
 .DS_Store
 Thumbs.db
+*.gv
+*.pdf
